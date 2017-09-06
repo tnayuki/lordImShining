@@ -8,6 +8,8 @@
 #include "ofxArtnet.h"
 #include "ofxGui.h"
 
+#include "ofxGenericDmx.h"
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -32,4 +34,6 @@ class ofApp : public ofBaseApp{
         ofxPanel gui;
         ofxToggle blackOutToggle;
         ofxSlider<int> bpmSlider;
+
+        DmxDevice *dmxDevice;
 };
