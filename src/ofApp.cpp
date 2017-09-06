@@ -15,6 +15,7 @@ void ofApp::setup(){
     
     dmxDevice = ofxGenericDmx::openFirstDevice(false);
     
+    oscReceiver.setup(1234);
     oscSender.setup("localhost", 4321);
 }
 
@@ -26,9 +27,17 @@ void ofApp::update() {
         lastBeatTime = ofGetElapsedTimef();
     }
     
-    bool step = false;
-    step = stepButton;
-    
+    bool step = stepButton;
+
+    ofxOscMessage oscMessage;
+    while (oscReceiver.getNextMessage(oscMessage)) {
+        if (oscMessage.getAddress() == "/LEFT/gesture" || oscMessage.getAddress() == "/RIGHT/gesture") {
+            if (oscMessage.getArgAsString(0) == "STEP") {
+                step = true;
+            }
+        }
+    }
+
     beatHistory.push_back(beat);
     stepHistory.push_back(step);
     if (beatHistory.size() > ofGetFrameRate() * 3) {

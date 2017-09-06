@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
 
         DmxDevice *dmxDevice;
         ofxOscSender oscSender;
+        ofxOscReceiver oscReceiver;
 
         float lastBeatTime;
         vector<bool> beatHistory;
