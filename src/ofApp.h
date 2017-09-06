@@ -38,4 +38,7 @@ class ofApp : public ofBaseApp{
         ofxSlider<int> bpmSlider;
 
         DmxDevice *dmxDevice;
+
+        float lastBeatTime;
+        vector<bool> beatHistory;
 };

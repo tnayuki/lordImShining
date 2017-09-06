@@ -17,6 +17,17 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update() {
+    bool beat = false;
+    if (lastBeatTime + 60.0f / bpmSlider < ofGetElapsedTimef()) {
+        beat = true;
+        lastBeatTime = ofGetElapsedTimef();
+    }
+
+    beatHistory.push_back(beat);
+    if (beatHistory.size() > ofGetFrameRate() * 3) {
+        beatHistory.erase(beatHistory.begin());
+    }
+    
     unsigned char data[3];
     data[0] = 0;
     data[1] = 1;
@@ -29,8 +40,20 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw(){
     // Display FPS
+    ofSetColor(255, 255, 255);
     ofDrawBitmapString(ofToString(ofGetFrameRate()) + "fps", ofGetWidth() - 150, 20);
 
+    // Display beats
+    int framesFor3Seconds = ofGetFrameRate() * 3;
+    
+    ofFill();
+    for (int i = 0; i < beatHistory.size(); i++) {
+        if (beatHistory[i]) {
+            ofSetColor(255, 0, 0);
+            ofDrawRectangle(ofGetWidth() - ofGetWidth() * (beatHistory.size() - i) / framesFor3Seconds, 0, ofGetWidth() / framesFor3Seconds, ofGetHeight());
+        }
+    }
+    
     gui.draw();
 
 }
