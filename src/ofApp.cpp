@@ -8,6 +8,7 @@ void ofApp::setup(){
     
     gui.setup();
     gui.add(bpmSlider.setup("BPM", 135, 60, 180));
+    gui.add(stepButton.setup("Simulate a step", false));
     gui.add(blackOutToggle.setup("Black out", false));
     
     artnet.setup("169.254.181.144", 0, 1);
@@ -22,10 +23,15 @@ void ofApp::update() {
         beat = true;
         lastBeatTime = ofGetElapsedTimef();
     }
+    
+    bool step = false;
+    step = stepButton;
 
     beatHistory.push_back(beat);
+    stepHistory.push_back(step);
     if (beatHistory.size() > ofGetFrameRate() * 3) {
         beatHistory.erase(beatHistory.begin());
+        stepHistory.erase(stepHistory.begin());
     }
     
     unsigned char data[3];
@@ -39,18 +45,26 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofClear(0, 0, 0);
+    
     // Display FPS
-    ofSetColor(255, 255, 255);
+    ofColor(255, 255, 255);
     ofDrawBitmapString(ofToString(ofGetFrameRate()) + "fps", ofGetWidth() - 150, 20);
 
-    // Display beats
+    // Display beats & steps
     int framesFor3Seconds = ofGetFrameRate() * 3;
     
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofFill();
     for (int i = 0; i < beatHistory.size(); i++) {
         if (beatHistory[i]) {
             ofSetColor(255, 0, 0);
             ofDrawRectangle(ofGetWidth() - ofGetWidth() * (beatHistory.size() - i) / framesFor3Seconds, 0, ofGetWidth() / framesFor3Seconds, ofGetHeight());
+        }
+
+        if (stepHistory[i]) {
+            ofSetColor(0, 255, 0);
+            ofDrawRectangle(ofGetWidth() - ofGetWidth() * (stepHistory.size() - i) / framesFor3Seconds, 0, ofGetWidth() / framesFor3Seconds, ofGetHeight());
         }
     }
     

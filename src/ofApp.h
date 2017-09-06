@@ -34,6 +34,7 @@ class ofApp : public ofBaseApp{
         ofxArtnet artnet;
 
         ofxPanel gui;
+        ofxButton stepButton;
         ofxToggle blackOutToggle;
         ofxSlider<int> bpmSlider;
 
@@ -41,4 +42,6 @@ class ofApp : public ofBaseApp{
 
         float lastBeatTime;
         vector<bool> beatHistory;
+    
+        vector<bool> stepHistory;
 };
