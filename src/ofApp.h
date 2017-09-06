@@ -6,9 +6,7 @@
 #include <vector>
 
 #include "ofxArtnet.h"
-#include "ofxKinectV2.h"
 #include "ofxGui.h"
-#include "ofxOpenCv.h"
 
 class ofApp : public ofBaseApp{
 
@@ -30,26 +28,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
         ofxArtnet artnet;
-        ofxKinectV2 kinect;
-        ofTexture texDepth;
-        ofxCvContourFinder contourFinder;
 
         ofxPanel gui;
-        ofxButton learnBackgroundButton;
         ofxToggle blackOutToggle;
         ofxSlider<int> bpmSlider;
-        ofxSlider<int> thresholdSlider;
-
-        ofxPanel detectionAreaPanel;
-        ofxSlider<int> detectionAreaX;
-        ofxSlider<int> detectionAreaY;
-        ofxSlider<int> detectionAreaWidth;
-        ofxSlider<int> detectionAreaHeight;
-    
-        ofxCvGrayscaleImage backgroundGreyscaleImage;
-        ofxCvGrayscaleImage greyscaleImage;
-
-        int lastMean;
-        std::vector<int> meanVector;
-        std::vector<int> chartData;
 };
