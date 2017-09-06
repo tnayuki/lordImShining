@@ -28,6 +28,9 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    // Display FPS
+    ofDrawBitmapString(ofToString(ofGetFrameRate()) + "fps", ofGetWidth() - 150, 20);
+
     gui.draw();
 
 }
