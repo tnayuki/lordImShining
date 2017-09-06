@@ -5,7 +5,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //ofSetFrameRate(0);
-    
+
     gui.setup();
     gui.add(bpmSlider.setup("BPM", 135, 60, 180));
     gui.add(stepButton.setup("Simulate a step", false));
@@ -14,6 +14,8 @@ void ofApp::setup(){
     artnet.setup("169.254.181.144", 0, 1);
     
     dmxDevice = ofxGenericDmx::openFirstDevice(false);
+    
+    oscSender.setup("localhost", 4321);
 }
 
 //--------------------------------------------------------------
@@ -26,7 +28,7 @@ void ofApp::update() {
     
     bool step = false;
     step = stepButton;
-
+    
     beatHistory.push_back(beat);
     stepHistory.push_back(step);
     if (beatHistory.size() > ofGetFrameRate() * 3) {
@@ -41,6 +43,17 @@ void ofApp::update() {
 
     artnet.sendDmx("169.254.183.100", data + 1, 2);
     dmxDevice->writeDmx(data, 3);
+
+    if (step) {
+        ofxOscMessage oscMessage;
+        oscMessage.setAddress("/BOTH/triggerLightWithRGBColor");
+        oscMessage.addIntArg(0);
+        oscMessage.addIntArg(255);
+        oscMessage.addIntArg(255);
+        oscMessage.addIntArg(255);
+        
+        oscSender.sendMessage(oscMessage);
+    }
 }
 
 //--------------------------------------------------------------

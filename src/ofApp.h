@@ -7,8 +7,8 @@
 
 #include "ofxArtnet.h"
 #include "ofxGui.h"
-
 #include "ofxGenericDmx.h"
+#include "ofxOsc.h"
 
 class ofApp : public ofBaseApp{
 
@@ -39,6 +39,7 @@ class ofApp : public ofBaseApp{
         ofxSlider<int> bpmSlider;
 
         DmxDevice *dmxDevice;
+        ofxOscSender oscSender;
 
         float lastBeatTime;
         vector<bool> beatHistory;
