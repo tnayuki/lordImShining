@@ -9,6 +9,7 @@
 #include "ofxGui.h"
 #include "ofxGenericDmx.h"
 #include "ofxOsc.h"
+#include "ofxSoundObjects.h"
 
 class ofApp : public ofBaseApp{
 
@@ -28,6 +29,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+        void audioOut(ofSoundBuffer &outBuffer);
     
         float fps;
 
@@ -46,4 +48,10 @@ class ofApp : public ofBaseApp{
         vector<bool> beatHistory;
     
         vector<bool> stepHistory;
+    
+        std::vector<ofSoundBuffer> loopSoundBuffers;
+    
+        int loopNumber = 0;
+        int positionOnLoop = 0;
+    
 };
