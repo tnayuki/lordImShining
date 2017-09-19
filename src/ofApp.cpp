@@ -52,12 +52,22 @@ void ofApp::update() {
         stepHistory.erase(stepHistory.begin());
     }
     
-    unsigned char data[3];
-    data[0] = 0;
-    data[1] = 1;
-    data[2] = blackOutToggle ? 0 : (ofGetElapsedTimeMillis() % (60 * 1000 / 135) < 100 ? 255 : 0);
+    unsigned char data[2];
+    data[0] = data[1] = 0;
 
-    artnet.sendDmx("169.254.183.100", data + 1, 2);
+    if (!isPlaying) {
+        if (currentBar == 8 && currentBeat == 4 && currentQuarterBeat == 1) {
+            data[0] = 1;
+            data[1] = blackOutToggle ? 0 : 255;
+        }
+    } else {
+        if (step) {
+            data[0] = 1;
+            data[1] = blackOutToggle ? 0 : 255;
+        }
+    }
+
+    artnet.sendDmx("169.254.183.100", data, 2);
 
     if (beat) {
         ofxOscMessage oscMessage;
@@ -95,6 +105,9 @@ void ofApp::draw(){
     ofColor(255, 255, 255);
     ofDrawBitmapString(ofToString(ofGetFrameRate()) + "fps", ofGetWidth() - 150, 20);
 
+    // Display current bar/beat
+    ofDrawBitmapString(ofToString(currentBar) + "." + ofToString(currentBeat) + "." + ofToString(currentQuarterBeat), ofGetWidth() - 150, 40);
+
     // Display beats & steps
     int framesFor3Seconds = ofGetFrameRate() * 3;
     
@@ -118,7 +131,10 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == ' ') {
+        isPlaying = !isPlaying;
+        musicPosition = 0;
+    }
 }
 
 //--------------------------------------------------------------
@@ -173,14 +189,28 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &outBuffer) {
+    currentBar = musicPosition / 156800 + 1;
+    currentBeat = (musicPosition % 156800) / (156800 / 4) + 1;
+    currentQuarterBeat = (musicPosition % (156800 / 4)) / (156800 / 4 / 4) + 1;
+
+    if (musicPosition >= musicSoundBuffer.size()) {
+        return;
+    }
+
     for(int i = 0; i < outBuffer.size(); i += 2) {
         outBuffer[i] = musicSoundBuffer[musicPosition];
         outBuffer[i + 1] = musicSoundBuffer[musicPosition + 1];
         
         musicPosition += 2;
         
-        if (musicPosition >= musicSoundBuffer.size()) {
-            musicPosition = 0;
+        if (!isPlaying) {
+            if (musicPosition >= 14.22222222 * 44100 * 2) {
+                musicPosition = 0;
+            }
+        } else {
+            if (musicPosition >= musicSoundBuffer.size()) {
+                break;
+            }
         }
     }
 }

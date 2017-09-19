@@ -31,6 +31,11 @@ class ofApp : public ofBaseApp{
         void audioOut(ofSoundBuffer &outBuffer);
     
         float fps;
+    
+        bool isPlaying;
+        int currentBar;
+        int currentBeat;
+        int currentQuarterBeat;
 
         int beatNumber;
     
