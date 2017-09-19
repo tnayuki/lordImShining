@@ -7,7 +7,6 @@
 
 #include "ofxArtnet.h"
 #include "ofxGui.h"
-#include "ofxGenericDmx.h"
 #include "ofxOsc.h"
 #include "ofxSoundObjects.h"
 
@@ -38,9 +37,7 @@ class ofApp : public ofBaseApp{
         ofxPanel gui;
         ofxButton stepButton;
         ofxToggle blackOutToggle;
-        ofxSlider<int> bpmSlider;
 
-        DmxDevice *dmxDevice;
         ofxOscSender oscSender;
         ofxOscReceiver oscReceiver;
 

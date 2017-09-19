@@ -17,8 +17,6 @@ void ofApp::setup(){
     
     artnet.setup("169.254.181.144", 0, 1);
     
-    dmxDevice = ofxGenericDmx::openFirstDevice(false);
-    
     oscReceiver.setup(1234);
     oscSender.setup("localhost", 4321);
 }
@@ -26,7 +24,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update() {
     bool beat = false;
-    if (lastBeatTime + 60.0f / bpmSlider < ofGetElapsedTimef()) {
+    if (lastBeatTime + 60.0f / 135 < ofGetElapsedTimef()) {
         beat = true;
         lastBeatTime = ofGetElapsedTimef();
     }
@@ -52,10 +50,9 @@ void ofApp::update() {
     unsigned char data[3];
     data[0] = 0;
     data[1] = 1;
-    data[2] = blackOutToggle ? 0 : (ofGetElapsedTimeMillis() % (60 * 1000 / bpmSlider) < 100 ? 255 : 0);
+    data[2] = blackOutToggle ? 0 : (ofGetElapsedTimeMillis() % (60 * 1000 / 135) < 100 ? 255 : 0);
 
     artnet.sendDmx("169.254.183.100", data + 1, 2);
-    dmxDevice->writeDmx(data, 3);
 
     if (step) {
         ofxOscMessage oscMessage;
