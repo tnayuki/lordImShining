@@ -32,6 +32,8 @@ class ofApp : public ofBaseApp{
     
         float fps;
 
+        int beatNumber;
+    
         ofxArtnet artnet;
 
         ofxPanel gui;

@@ -19,6 +19,11 @@ void ofApp::setup(){
     
     oscReceiver.setup(1234);
     oscSender.setup("localhost", 4321);
+
+    ofxOscMessage oscMessage;
+    oscMessage.setAddress("/BOTH/setLightOff");
+    oscMessage.addIntArg(0);
+    oscSender.sendMessage(oscMessage);
 }
 
 //--------------------------------------------------------------
@@ -54,15 +59,31 @@ void ofApp::update() {
 
     artnet.sendDmx("169.254.183.100", data + 1, 2);
 
-    if (step) {
+    if (beat) {
         ofxOscMessage oscMessage;
-        oscMessage.setAddress("/BOTH/triggerLightWithRGBColor");
-        oscMessage.addIntArg(0);
-        oscMessage.addIntArg(255);
-        oscMessage.addIntArg(255);
-        oscMessage.addIntArg(255);
+        oscMessage.setAddress("/LEFT/triggerLightWithRGBColor");
+        oscMessage.addIntArg(1);
+        if (beatNumber == 0) {
+            oscMessage.addIntArg(255);
+            oscMessage.addIntArg(0);
+            oscMessage.addIntArg(0);
+        } else if (beatNumber == 1) {
+            oscMessage.addIntArg(0);
+            oscMessage.addIntArg(255);
+            oscMessage.addIntArg(0);
+        } else if (beatNumber == 2) {
+            oscMessage.addIntArg(0);
+            oscMessage.addIntArg(0);
+            oscMessage.addIntArg(255);
+        } else if (beatNumber == 3) {
+            oscMessage.addIntArg(255);
+            oscMessage.addIntArg(255);
+            oscMessage.addIntArg(255);
+        }
         
         oscSender.sendMessage(oscMessage);
+        
+        beatNumber = (beatNumber + 1) % 4;
     }
 }
 
