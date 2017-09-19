@@ -5,23 +5,13 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //ofSetFrameRate(0);
+
+    ofxSoundFile soundFile("Revolution of Life.m4a");
+    soundFile.readTo(musicSoundBuffer);
+
     ofSoundStreamSetup(2, 0);
-
-    const char *loopSoundFilenames[] = {
-        "Revolution1.wav",
-        "Revolution2.wav"
-    };
-
-    ofxSoundFile sound;
-    for (int i = 0; i < sizeof(loopSoundFilenames) / sizeof(const char *); i++) {
-        sound.load(loopSoundFilenames[i]);
-        
-        loopSoundBuffers.push_back(ofSoundBuffer());
-        sound.readTo(loopSoundBuffers[i]);
-    }
     
     gui.setup();
-    gui.add(bpmSlider.setup("BPM", 135, 60, 180));
     gui.add(stepButton.setup("Simulate a step", false));
     gui.add(blackOutToggle.setup("Black out", false));
     
@@ -165,19 +155,14 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &outBuffer) {
-    if (loopSoundBuffers[loopNumber].size() <= positionOnLoop) {
-        positionOnLoop += outBuffer.size();
-    } else {
-        for(int i = 0; i < outBuffer.size(); i += 2) {
-            outBuffer[i] = loopSoundBuffers[loopNumber][positionOnLoop];
-            outBuffer[i + 1] = loopSoundBuffers[loopNumber][positionOnLoop + 1];
+    for(int i = 0; i < outBuffer.size(); i += 2) {
+        outBuffer[i] = musicSoundBuffer[musicPosition];
+        outBuffer[i + 1] = musicSoundBuffer[musicPosition + 1];
         
-            positionOnLoop += 2;
+        musicPosition += 2;
         
-            if (positionOnLoop >= loopSoundBuffers[loopNumber].size()) {
-                positionOnLoop = 0;
-                loopNumber = (loopNumber + 1) % loopSoundBuffers.size();
-            }
+        if (musicPosition >= musicSoundBuffer.size()) {
+            musicPosition = 0;
         }
     }
 }

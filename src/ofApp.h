@@ -49,9 +49,6 @@ class ofApp : public ofBaseApp{
     
         vector<bool> stepHistory;
     
-        std::vector<ofSoundBuffer> loopSoundBuffers;
-    
-        int loopNumber = 0;
-        int positionOnLoop = 0;
-    
+        ofSoundBuffer musicSoundBuffer;
+        long musicPosition = 0;
 };
