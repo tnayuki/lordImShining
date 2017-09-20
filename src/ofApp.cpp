@@ -4,7 +4,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    //ofSetFrameRate(0);
+    ofSetFrameRate(60);
 
     ofxSoundFile soundFile("Revolution of Life.m4a");
     soundFile.readTo(musicSoundBuffer);
@@ -109,7 +109,7 @@ void ofApp::draw(){
     ofDrawBitmapString(ofToString(currentBar) + "." + ofToString(currentBeat) + "." + ofToString(currentQuarterBeat), ofGetWidth() - 150, 40);
 
     // Display beats & steps
-    int framesFor3Seconds = ofGetFrameRate() * 3;
+    int framesFor3Seconds = ofGetTargetFrameRate() * 3;
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofFill();
