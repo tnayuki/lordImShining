@@ -99,7 +99,11 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ofClear(0, 0, 0);
+    if (isPlaying) {
+        ofClear(0, 0, 0);
+    } else {
+        ofClear(128, 128, 128);
+    }
     
     // Display FPS
     ofColor(255, 255, 255);
