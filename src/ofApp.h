@@ -55,4 +55,8 @@ class ofApp : public ofBaseApp{
     
         ofSoundBuffer musicSoundBuffer;
         long musicPosition = 0;
+    
+        int flashFrameCount;
+        int flashSpeed;
+    
 };

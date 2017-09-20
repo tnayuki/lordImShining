@@ -55,16 +55,36 @@ void ofApp::update() {
     unsigned char data[2];
     data[0] = data[1] = 0;
 
-    if (!isPlaying) {
-        if (currentBar == 8 && currentBeat == 4 && currentQuarterBeat == 1) {
-            data[0] = 1;
-            data[1] = blackOutToggle ? 0 : 255;
+    if (step) {
+        flashFrameCount = 1;
+        flashSpeed = 1;
+
+        if (ofGetElapsedTimef() - lastBeatTime < 0.2f || lastBeatTime + 60.0f / 135.0f - ofGetElapsedTimef() < 0.2f) {
+            flashFrameCount = 10;
+            flashSpeed = 255;
         }
+
+        if (currentBar >= 25 && currentBar < 33) {
+            flashFrameCount = 23;
+            flashSpeed = 255;
+        } else if (currentBar >= 65 && currentBar < 81) {
+            flashFrameCount = 23;
+            flashSpeed = 255;
+        }
+
+    } else if (!isPlaying && currentBar == 1 && currentBeat == 1 && currentQuarterBeat == 1) {
+        flashFrameCount = 10;
+        flashSpeed = 255;
+    }
+    
+    if (flashFrameCount > 0) {
+        data[0] = flashSpeed;
+        data[1] = blackOutToggle ? 0 : 255;
+        
+        flashFrameCount--;
     } else {
-        if (step) {
-            data[0] = 1;
-            data[1] = blackOutToggle ? 0 : 255;
-        }
+        data[0] = 0;
+        data[1] = 0;
     }
 
     artnet.sendDmx("169.254.183.100", data, 2);
@@ -99,6 +119,8 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+
     if (isPlaying) {
         ofClear(0, 0, 0);
     } else {
@@ -112,6 +134,9 @@ void ofApp::draw(){
     // Display current bar/beat
     ofDrawBitmapString(ofToString(currentBar) + "." + ofToString(currentBeat) + "." + ofToString(currentQuarterBeat), ofGetWidth() - 150, 40);
 
+    // Display frame count to flash;
+    ofDrawBitmapString(ofToString(flashFrameCount), ofGetWidth() - 150, 60);
+    
     // Display beats & steps
     int framesFor3Seconds = ofGetTargetFrameRate() * 3;
     
