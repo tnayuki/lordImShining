@@ -71,7 +71,7 @@ void ofApp::update() {
 
     if (beat) {
         ofxOscMessage oscMessage;
-        oscMessage.setAddress("/LEFT/triggerLightWithRGBColor");
+        oscMessage.setAddress("/BOTH/triggerLightWithRGBColor");
         oscMessage.addIntArg(1);
         if (beatNumber == 0) {
             oscMessage.addIntArg(255);
