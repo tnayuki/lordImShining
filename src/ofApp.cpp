@@ -208,7 +208,7 @@ void ofApp::audioOut(ofSoundBuffer &outBuffer) {
         musicPosition += 2;
         
         if (!isPlaying) {
-            if (musicPosition >= 14.22222222 * 44100 * 2) {
+            if (musicPosition >= 7.111111111 * 44100 * 2) {
                 musicPosition = 0;
             }
         } else {
