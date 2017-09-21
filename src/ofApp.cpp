@@ -34,7 +34,9 @@ void ofApp::update() {
         lastBeatTime = ofGetElapsedTimef();
     }
     
-    bool step = stepButton;
+    if (stepButton) {
+        step = true;
+    }
 
     ofxOscMessage oscMessage;
     while (oscReceiver.getNextMessage(oscMessage)) {
@@ -115,6 +117,8 @@ void ofApp::update() {
         
         beatNumber = (beatNumber + 1) % 4;
     }
+    
+    step = false;
 }
 
 //--------------------------------------------------------------
@@ -163,6 +167,10 @@ void ofApp::keyPressed(int key){
     if (key == ' ') {
         isPlaying = !isPlaying;
         musicPosition = 0;
+    } else {
+        if (key == 'L' || key == 'R') {
+            step = true;
+        }
     }
 }
 

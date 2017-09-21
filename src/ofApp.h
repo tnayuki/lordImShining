@@ -59,4 +59,5 @@ class ofApp : public ofBaseApp{
         int flashFrameCount;
         int flashSpeed;
     
+    bool step;
 };
