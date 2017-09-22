@@ -62,4 +62,5 @@ class ofApp : public ofBaseApp{
     bool step;
     
         ofVideoPlayer videoPlayer;
+        ofTrueTypeFont font;
 };

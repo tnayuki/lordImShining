@@ -10,6 +10,8 @@ void ofApp::setup(){
     videoPlayer.setLoopState(OF_LOOP_NORMAL);
     videoPlayer.play();
     
+    font.loadFont("Verdana.ttf", 20);
+    
     ofxSoundFile soundFile("Revolution of Life.m4a");
     soundFile.readTo(musicSoundBuffer);
 
@@ -135,6 +137,8 @@ void ofApp::draw(){
 
     if (!isPlaying) {
         videoPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
+        
+        font.drawString("Press SPACE key", 360, 640);
     }
     
     // Display FPS
