@@ -60,4 +60,6 @@ class ofApp : public ofBaseApp{
         int flashSpeed;
     
     bool step;
+    
+        ofVideoPlayer videoPlayer;
 };

@@ -6,6 +6,10 @@
 void ofApp::setup(){
     ofSetFrameRate(60);
 
+    videoPlayer.load("TGS 2017.mov");
+    videoPlayer.setLoopState(OF_LOOP_NORMAL);
+    videoPlayer.play();
+    
     ofxSoundFile soundFile("Revolution of Life.m4a");
     soundFile.readTo(musicSoundBuffer);
 
@@ -28,6 +32,8 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update() {
+    videoPlayer.update();
+    
     bool beat = false;
     if (lastBeatTime + 60.0f / 135 < ofGetElapsedTimef()) {
         beat = true;
@@ -124,15 +130,14 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+    ofSetColor(255, 255, 255);
+    ofClear(0, 0, 0);
 
-    if (isPlaying) {
-        ofClear(0, 0, 0);
-    } else {
-        ofClear(128, 128, 128);
+    if (!isPlaying) {
+        videoPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
     }
     
     // Display FPS
-    ofColor(255, 255, 255);
     ofDrawBitmapString(ofToString(ofGetFrameRate()) + "fps", ofGetWidth() - 150, 20);
 
     // Display current bar/beat
@@ -143,18 +148,17 @@ void ofApp::draw(){
     
     // Display beats & steps
     int framesFor3Seconds = ofGetTargetFrameRate() * 3;
-    
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
-    ofFill();
+
+    ofBlendMode(OF_BLENDMODE_ADD);
     for (int i = 0; i < beatHistory.size(); i++) {
         if (beatHistory[i]) {
             ofSetColor(255, 0, 0);
-            ofDrawRectangle(ofGetWidth() - ofGetWidth() * (beatHistory.size() - i) / framesFor3Seconds, 0, ofGetWidth() / framesFor3Seconds, ofGetHeight());
+            ofDrawRectangle(ofGetWidth() - ofGetWidth() * (beatHistory.size() - i) / framesFor3Seconds, ofGetHeight() - ofGetHeight() / 32, ofGetWidth() / framesFor3Seconds, ofGetHeight());
         }
 
         if (stepHistory[i]) {
             ofSetColor(0, 255, 0);
-            ofDrawRectangle(ofGetWidth() - ofGetWidth() * (stepHistory.size() - i) / framesFor3Seconds, 0, ofGetWidth() / framesFor3Seconds, ofGetHeight());
+            ofDrawRectangle(ofGetWidth() - ofGetWidth() * (stepHistory.size() - i) / framesFor3Seconds, ofGetHeight() - ofGetHeight() / 32, ofGetWidth() / framesFor3Seconds, ofGetHeight());
         }
     }
     
