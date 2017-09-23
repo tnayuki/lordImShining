@@ -2,8 +2,13 @@
 
 #include "ofUtils.h"
 
+extern void InitializePlugin();
+extern void VibrateInternal(int index, unsigned char strength);
+
 //--------------------------------------------------------------
 void ofApp::setup(){
+    InitializePlugin();
+
     ofSetFrameRate(60);
 
     videoPlayer.load("TGS 2017.mov");
@@ -36,7 +41,13 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update() {
     videoPlayer.update();
-    
+
+    if (currentQuarterBeat == 4) {
+        VibrateInternal(0, 255);
+    } if (currentQuarterBeat == 1) {
+        VibrateInternal(0, 0);
+    }
+
     bool beat = false;
     if (lastBeatTime + 60.0f / 135 < ofGetElapsedTimef()) {
         beat = true;
