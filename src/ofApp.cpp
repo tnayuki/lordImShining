@@ -15,7 +15,7 @@ void ofApp::setup(){
     ofxSoundFile soundFile("Revolution of Life.m4a");
     soundFile.readTo(musicSoundBuffer);
 
-    musicPosition = 7.111111111 * 44100 * 2 * 4;
+    musicPosition = 156800 * 16;
     ofSoundStreamSetup(2, 0);
     
     gui.setup();
@@ -67,13 +67,10 @@ void ofApp::update() {
     data[0] = data[1] = 0;
 
     if (step) {
+        stepCount++;
+        
         flashFrameCount = 1;
         flashSpeed = 1;
-
-        if (ofGetElapsedTimef() - lastBeatTime < 0.2f || lastBeatTime + 60.0f / 135.0f - ofGetElapsedTimef() < 0.2f) {
-            flashFrameCount = 10;
-            flashSpeed = 255;
-        }
 
         if (currentBar >= 25 && currentBar < 33) {
             flashFrameCount = 23;
@@ -83,7 +80,7 @@ void ofApp::update() {
             flashSpeed = 255;
         }
 
-    } else if (!isPlaying && currentBar == 1 && currentBeat == 1 && currentQuarterBeat == 1) {
+    } else if (currentBar == 17 && currentBeat == 1 && currentQuarterBeat == 1) {
         flashFrameCount = 10;
         flashSpeed = 255;
     }
@@ -136,11 +133,7 @@ void ofApp::draw(){
     ofSetColor(255, 255, 255);
     ofClear(0, 0, 0);
 
-    if (!isPlaying) {
-        videoPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
-        
-        font.drawString("Press the space key", 320, 640);
-    }
+    videoPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
     
     // Display FPS
     ofDrawBitmapString(ofToString(ofGetFrameRate()) + "fps", ofGetWidth() - 150, 20);
@@ -174,8 +167,7 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (key == ' ') {
-        isPlaying = !isPlaying;
-        musicPosition = 7.111111111 * 44100 * 2 * 4;
+        musicPosition = 156800 * 16;
     } else {
         if ((key == 'L' || key == 'R') && (!lastStepTime || lastStepTime - ofGetElapsedTimeMillis() > 200)) {
             step = true;
@@ -236,28 +228,40 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 //--------------------------------------------------------------
 void ofApp::audioOut(ofSoundBuffer &outBuffer) {
-    currentBar = musicPosition / 156800 + 1;
-    currentBeat = (musicPosition % 156800) / (156800 / 4) + 1;
-    currentQuarterBeat = (musicPosition % (156800 / 4)) / (156800 / 4 / 4) + 1;
-
     if (musicPosition >= musicSoundBuffer.size()) {
         return;
     }
 
     for(int i = 0; i < outBuffer.size(); i += 2) {
+        if (musicPosition > 156800 * 16 && (musicPosition % 156800) == 0) {
+            if (stepCount < 3) {
+                if (missedCount > 0) {
+                    musicPosition -= 156800 * 2;
+                    musicPosition = musicPosition < 156800 * 16 ? 156800 * 16 : musicPosition;
+                    
+                    missedCount = 0;
+                } else {
+                    musicPosition -= 156800;
+                    missedCount++;
+                }
+            } else {
+                missedCount = 0;
+            }
+            
+            stepCount = 0;
+        }
+        
         outBuffer[i] = musicSoundBuffer[musicPosition];
         outBuffer[i + 1] = musicSoundBuffer[musicPosition + 1];
         
         musicPosition += 2;
         
-        if (!isPlaying) {
-            if (musicPosition >= 7.111111111 * 44100 * 2 * 5) {
-                musicPosition = 7.111111111 * 44100 * 2 * 4;
-            }
-        } else {
-            if (musicPosition >= musicSoundBuffer.size()) {
-                break;
-            }
+        if (musicPosition >= musicSoundBuffer.size()) {
+            break;
         }
     }
+
+    currentBar = musicPosition / 156800 + 1;
+    currentBeat = (musicPosition % 156800) / (156800 / 4) + 1;
+    currentQuarterBeat = (musicPosition % (156800 / 4)) / (156800 / 4 / 4) + 1;
 }

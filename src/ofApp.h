@@ -60,7 +60,9 @@ class ofApp : public ofBaseApp{
         int flashSpeed;
     
         bool step;
+        int stepCount;
         long lastStepTime;
+        int missedCount;
     
         ofVideoPlayer videoPlayer;
         ofTrueTypeFont font;
