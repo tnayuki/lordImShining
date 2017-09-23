@@ -11,10 +11,11 @@ void ofApp::setup(){
     videoPlayer.play();
     
     font.loadFont("Verdana.ttf", 20);
-    
+
     ofxSoundFile soundFile("Revolution of Life.m4a");
     soundFile.readTo(musicSoundBuffer);
 
+    musicPosition = 7.111111111 * 44100 * 2 * 4;
     ofSoundStreamSetup(2, 0);
     
     gui.setup();
@@ -138,7 +139,7 @@ void ofApp::draw(){
     if (!isPlaying) {
         videoPlayer.draw(0, 0, ofGetWidth(), ofGetHeight());
         
-        font.drawString("Press SPACE key", 360, 640);
+        font.drawString("Press the space key", 320, 640);
     }
     
     // Display FPS
@@ -174,7 +175,7 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     if (key == ' ') {
         isPlaying = !isPlaying;
-        musicPosition = 0;
+        musicPosition = 7.111111111 * 44100 * 2 * 4;
     } else {
         if (key == 'L' || key == 'R') {
             step = true;
@@ -249,8 +250,8 @@ void ofApp::audioOut(ofSoundBuffer &outBuffer) {
         musicPosition += 2;
         
         if (!isPlaying) {
-            if (musicPosition >= 7.111111111 * 44100 * 2) {
-                musicPosition = 0;
+            if (musicPosition >= 7.111111111 * 44100 * 2 * 5) {
+                musicPosition = 7.111111111 * 44100 * 2 * 4;
             }
         } else {
             if (musicPosition >= musicSoundBuffer.size()) {
