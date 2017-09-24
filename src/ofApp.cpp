@@ -258,8 +258,8 @@ void ofApp::audioOut(ofSoundBuffer &outBuffer) {
     }
 
     for(int i = 0; i < outBuffer.size(); i += 2) {
-        outBuffer[i] = musicSoundBuffer[musicPosition];
-        outBuffer[i + 1] = musicSoundBuffer[musicPosition + 1];
+        outBuffer[i] = musicSoundBuffer[musicPosition] * (!isPlaying ? 0.3 : 1.0);
+        outBuffer[i + 1] = musicSoundBuffer[musicPosition + 1]  * (!isPlaying ? 0.3 : 1.0);
         
         musicPosition += 2;
         
