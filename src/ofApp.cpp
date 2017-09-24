@@ -190,7 +190,7 @@ void ofApp::keyPressed(int key){
         isPlaying = !isPlaying;
         musicPosition = 7.111111111 * 44100 * 2 * 4;
     } else {
-        if ((key == 'L' || key == 'R') && (!lastStepTime || lastStepTime - ofGetElapsedTimeMillis() > 200)) {
+        if ((key == 'L' || key == 'R' || key == 'M' || key == 'S') && (!lastStepTime || lastStepTime - ofGetElapsedTimeMillis() > 200)) {
             step = true;
             lastStepTime = ofGetElapsedTimeMillis();
         }
