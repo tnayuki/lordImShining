@@ -254,6 +254,9 @@ void ofApp::audioOut(ofSoundBuffer &outBuffer) {
     currentQuarterBeat = (musicPosition % (156800 / 4)) / (156800 / 4 / 4) + 1;
 
     if (musicPosition >= musicSoundBuffer.size()) {
+        isPlaying = false;
+        musicPosition = 7.111111111 * 44100 * 2 * 4;
+
         return;
     }
 
