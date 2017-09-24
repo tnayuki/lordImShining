@@ -44,8 +44,10 @@ void ofApp::update() {
 
     if (currentQuarterBeat == 4) {
         VibrateInternal(0, 255);
+        VibrateInternal(1, 255);
     } if (currentQuarterBeat == 1) {
         VibrateInternal(0, 0);
+        VibrateInternal(1, 0);
     }
 
     bool beat = false;
